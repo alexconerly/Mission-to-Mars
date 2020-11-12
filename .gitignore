@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Stuff added to ignore:
+Practice.ipynb
+
 # C extensions
 *.so
 
