@@ -18,7 +18,7 @@ def scrape_all():
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
         "last_modified": dt.datetime.now(),
-        "new_dict": hemispheres(browser)
+        "hemispheres": hemispheres(browser)
     }
 
     # Stop webdriver and return data
@@ -127,7 +127,7 @@ def hemispheres(browser):
         browser.back()
 
     # Return the scraped data as a list of dictionaries with the URL string and title of each hemisphere image.
-    return hemisphere_image_url
+    return hemisphere_image_urls
     
 
 
