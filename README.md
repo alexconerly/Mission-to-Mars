@@ -34,4 +34,4 @@ As a result of the project, the web application served as a useful display tool 
 
 ## Summary
 
-From this project, it is clear that with the incorporation of a few tools such as flask, html, bootstrap, and a python-based file for scraping functions one can easily create a web application for collecting and displaying data.  Furthermore, the data and the display is extremely customizable according to the goal of the user.
+From this project, it is clear that with the incorporation of a few tools such as flask, html, bootstrap, and a python-based file for scraping functions one can easily create a web application for collecting and displaying data.  Furthermore, the data and the display is extremely customizable according to the individual goals and preferences of the user.
