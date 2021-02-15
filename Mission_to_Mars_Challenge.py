@@ -1,16 +1,16 @@
- # 10.3.3 Scrape Mars Data:  The News
+# 10.3.3 Scrape Mars Data:  The News
 
 
 # Import Splinter and BeautifulSoup
 from splinter import Browser
 from bs4 import BeautifulSoup as soup
 
-#10.3.5 we decide to import pandas:
+# 10.3.5 we decide to import pandas:
 import pandas as pd
 
 
 # Path to chromedriver
-get_ipython().system('which chromedriver')
+#get_ipython().system('which chromedriver')
 
 
 # Set the executable path and initialize the chrome browser in splinter
@@ -53,19 +53,19 @@ news_p
 
 
 # Visit URL
-url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
+url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
 browser.visit(url)
 
 
 # Find and click the full image button
-full_image_elem = browser.find_by_id('full_image')
+full_image_elem = browser.find_by_tag('button')[1]
 full_image_elem.click()
 
 
 # Find the more info button and click that
-browser.is_element_present_by_text('more info', wait_time=1)
-more_info_elem = browser.links.find_by_partial_text('more info')
-more_info_elem.click()
+#browser.is_element_present_by_text('more info', wait_time=1)
+#more_info_elem = browser.links.find_by_partial_text('more info')
+# more_info_elem.click()
 
 
 # Parse the resulting html with soup:
@@ -74,7 +74,7 @@ img_soup = soup(html, 'html.parser')
 
 
 # Find the relative image url
-img_url_rel = img_soup.select_one('figure.lede a img').get("src")
+img_url_rel = img_soup.select_one('img').get("src")
 img_url_rel
 
 
@@ -87,13 +87,12 @@ img_url
 
 
 df = pd.read_html('http://space-facts.com/mars/')[0]
-df.columns=['description', 'value']
+df.columns = ['description', 'value']
 df.set_index('description', inplace=True)
 df
 
 
 df.to_html()
-
 
 
 browser.quit()
@@ -103,13 +102,10 @@ browser.quit()
 
 
 # Import Splinter, BeautifulSoup, and Pandas
-from splinter import Browser
-from bs4 import BeautifulSoup as soup
-import pandas as pd
 
 
 # Path to chromedriver
-get_ipython().system('which chromedriver')
+#get_ipython().system('which chromedriver')
 
 
 # Set the executable path and initialize the chrome browser in splinter
@@ -135,7 +131,6 @@ news_soup = soup(html, 'html.parser')
 slide_elem = news_soup.select_one('ul.item_list li.slide')
 
 
-
 slide_elem.find("div", class_='content_title')
 
 # Use the parent element to find the first a tag and save it as `news_title`
@@ -150,18 +145,18 @@ news_p
 # ### JPL Space Images Featured Image
 
 # Visit URL
-url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
+url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
 browser.visit(url)
 
 # Find and click the full image button
-full_image_elem = browser.find_by_id('full_image')
+full_image_elem = browser.find_by_tag('button')[1]
 full_image_elem.click()
 
 
 # Find the more info button and click that
-browser.is_element_present_by_text('more info', wait_time=1)
-more_info_elem = browser.links.find_by_partial_text('more info')
-more_info_elem.click()
+#browser.is_element_present_by_text('more info', wait_time=1)
+#more_info_elem = browser.links.find_by_partial_text('more info')
+# more_info_elem.click()
 
 
 # Parse the resulting html with soup
@@ -170,7 +165,7 @@ img_soup = soup(html, 'html.parser')
 
 
 # find the relative image url
-img_url_rel = img_soup.select_one('figure.lede a img').get("src")
+img_url_rel = img_soup.select('img').get("src")
 img_url_rel
 
 
@@ -184,7 +179,7 @@ df = pd.read_html('http://space-facts.com/mars/')[0]
 
 df.head()
 
-df.columns=['Description', 'Mars']
+df.columns = ['Description', 'Mars']
 df.set_index('Description', inplace=True)
 df
 
@@ -213,7 +208,7 @@ print(weather_table.prettify())
 
 # ### Hemispheres
 
-# 1. Use browser to visit the URL 
+# 1. Use browser to visit the URL
 url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
 browser.visit(url)
 
@@ -228,17 +223,17 @@ hemi_links = browser.find_by_css("a.product-item h3")
 
 for i in range(len(hemi_links)):
     hemisphere = {}
-    #find the link on each loop:
+    # find the link on each loop:
     browser.find_by_css('a.product-item h3')[i].click()
-    #find the sample image and get href
+    # find the sample image and get href
     sample = browser.links.find_by_text('Sample').first
     hemisphere['img_url'] = sample['href']
-    
-    #get title
+
+    # get title
     hemisphere['title'] = browser.find_by_css('h2.title').text
-    #append hemisphere object to list and go back
+    # append hemisphere object to list and go back
     hemisphere_image_urls.append(hemisphere)
-    
+
     browser.back()
 
 
@@ -248,4 +243,3 @@ hemisphere_image_urls
 
 # 5. Quit the browser
 browser.quit()
-

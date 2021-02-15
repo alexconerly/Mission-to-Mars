@@ -5,6 +5,7 @@ __pycache__/
 
 # Stuff added to ignore:
 Practice.ipynb
+config.py
 
 # C extensions
 *.so

@@ -46,7 +46,8 @@ def mars_news(browser):
         # Use the parent element to find the first 'a' tag and save it as 'news_title'
         news_title = slide_elem.find("div", class_="content_title").get_text()
         # Use the parent element to find the paragraph text
-        news_p = slide_elem.find("div", class_="article_teaser_body").get_text()
+        news_p = slide_elem.find(
+            "div", class_="article_teaser_body").get_text()
 
     except AttributeError:
         return None, None
@@ -56,34 +57,32 @@ def mars_news(browser):
 
 def featured_image(browser):
     # Visit URL
-    url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
+    url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
     browser.visit(url)
 
     # Find and click the full image button
-    full_image_elem = browser.find_by_id('full_image')[0]
+    full_image_elem = browser.find_by_tag('button')[1]
     full_image_elem.click()
 
     # Find the more info button and click that
-    browser.is_element_present_by_text('more info', wait_time=1)
-    more_info_elem = browser.links.find_by_partial_text('more info')
-    more_info_elem.click()
+    #browser.is_element_present_by_text('more info', wait_time=1)
+    #more_info_elem = browser.links.find_by_partial_text('more info')
+    # more_info_elem.click()
 
     # Parse the resulting html with soup
     html = browser.html
     img_soup = soup(html, 'html.parser')
 
     # Add try/except for error handling
-    try:
-        # Find the relative image url
-        img_url_rel = img_soup.select_one('figure.lede a img').get("src")
-
-    except AttributeError:
-        return None
+    img_soup.select('fancybox-image')
+    # Find the relative image url
+    img_url_rel = img_soup.select('img')[-1].get('src')
 
     # Use the base url to create an absolute url
-    img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
-
+    img_url = f'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/{img_url_rel}'
+    print(img_url)
     return img_url
+
 
 def mars_facts():
     # Add try/except for error handling
@@ -95,11 +94,12 @@ def mars_facts():
         return None
 
     # Assign columns and set index of dataframe
-    df.columns=['Description', 'Mars']
+    df.columns = ['Description', 'Mars']
     df.set_index('Description', inplace=True)
 
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html(classes="table table-hover")
+
 
 def hemispheres(browser):
     url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
@@ -113,22 +113,21 @@ def hemispheres(browser):
 
     for i in range(len(hemi_links)):
         hemispheres = {}
-        #find the link on each loop:
+        # find the link on each loop:
         browser.find_by_css('a.product-item h3')[i].click()
-        #find the sample image and get href
+        # find the sample image and get href
         sample = browser.links.find_by_text('Sample').first
         hemispheres['img_url'] = sample['href']
-    
-        #get title
+
+        # get title
         hemispheres['title'] = browser.find_by_css('h2.title').text
-        #append hemisphere object to list and go back
+        # append hemisphere object to list and go back
         hemisphere_image_urls.append(hemispheres)
-    
+
         browser.back()
 
     # Return the scraped data as a list of dictionaries with the URL string and title of each hemisphere image.
     return hemisphere_image_urls
-    
 
 
 if __name__ == "__main__":
